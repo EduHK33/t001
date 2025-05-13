@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+
+"""
+Simulação educacional de um script de reconhecimento pós-comprometimento.
+Nome: Eduardo Gutierrez
+Data: 12/05/2025
+
+Este script simula comportamentos observados em malwares de Acesso Remoto (RAT),
+focando na fase de reconhecimento, com base em técnicas da matriz MITRE ATT&CK.
+NENHUMA ação maliciosa é realizada - uso estritamente educacional.
+"""
+
+import platform
+import socket
+import subprocess
+
+# ============================
+# TÉCNICA 1: T1082 - System Information Discovery
+# Coleta informações básicas do sistema.
+# Referência: https://attack.mitre.org/techniques/T1082/
+# ============================
+
+def system_info():
+    print("[+] Coletando informações do sistema (T1082)...\n")
+    print(f"  Sistema operacional: {platform.system()} {platform.release()}")
+    print(f"  Versão do SO: {platform.version()}")
+    print(f"  Nome do host: {socket.gethostname()}")
+    print(f"  Arquitetura: {platform.machine()}")
+    print(f"  Processador: {platform.processor()}\n")
+
+# ============================
+# TÉCNICA 2: T1016 - System Network Configuration Discovery
+# Coleta informações da rede local e configuração de IP.
+# Referência: https://attack.mitre.org/techniques/T1016/
+# ============================
+
+def network_info():
+    print("[+] Coletando informações de rede (T1016)...\n")
+    try:
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+        print(f"  Nome do host: {hostname}")
+        print(f"  IP local: {local_ip}")
+    except Exception as e:
+        print(f"  Erro ao obter IP local: {e}")
+
+    print("\n  Interfaces de rede (via 'ipconfig' ou 'ifconfig'):")
+    try:
+        if platform.system().lower() == "windows":
+            output = subprocess.check_output("ipconfig", shell=True, encoding='utf-8')
+        else:
+            output = subprocess.check_output("ifconfig", shell=True, encoding='utf-8')
+        print(output[:500])  # limitar a saída para evitar muita informação
+    except Exception as e:
+        print(f"  Erro ao executar comando de rede: {e}")
+
+# ============================
+# Função principal
+# ============================
+
+def main():
+    print("=== Simulação de Reconhecimento Pós-Comprometimento ===\n")
+    system_info()
+    network_info()
+    print("\n[+] Simulação concluída com sucesso.")
+
+if __name__ == "__main__":
+    main()
